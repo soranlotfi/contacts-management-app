@@ -1,0 +1,4 @@
+every component should do 1 work
+in this project in navbar component we have an search part that should be a seperate
+component and import to the navbar component .
+
