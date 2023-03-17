@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+
+}
+
+.App h3{
+  font-family: Vazir;
+  font-weight: bold;
+  color: #985654;
 }
 
 .App-logo {
