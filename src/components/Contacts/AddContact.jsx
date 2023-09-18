@@ -44,8 +44,6 @@ const AddContact = ({
         }
         resetForm()
     }
-
-
     const formik = useFormik(
         {
             initialValues: formValues,
@@ -53,7 +51,6 @@ const AddContact = ({
             onSubmit: handleSubmit
         }
     )
-    console.log(formik.values)
     return (
         <>
             {loading ? (

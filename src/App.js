@@ -19,8 +19,8 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [forceRender, setForceRender] = useState(false);
-  const [getContacts, setContacts] = useState([]);
-  const [getGroups, setGroups] = useState([]);
+  const [Contacts, setContacts] = useState([]);
+  const [Groups, setGroups] = useState([]);
   const [getContact, setContact] = useState({
     fullame: "",
     photo: "",
@@ -115,22 +115,14 @@ const App = () => {
         <Route path="/" element={<Navigate to="/contacts" />} />
         <Route
           path="/contacts"
-          element={<Contacts contacts={getContacts} loading={loading} />}
+          element={<Contacts contacts={Contacts} loading={loading} />}
         />
         <Route
           path="/contacts/add"
-          element={
-            <AddContact
-              loading={loading}
-              setContactInfo={setContactInfo}
-              contact={getContact}
-              groups={getGroups}
-              createContactForm={createContactForm}
-            />
-          }
+          element={<AddContact loading={loading} groups={Groups}/>}
         />
         <Route path="/contacts/:contactId" element={<ViewContact />} />
-        <Route path="/contacts/edit/:contactId" element={<EditContact />} />
+        <Route path="/contacts/edit/:contactId" element={<EditContact groups={Groups}/>} />
       </Routes>
     </div>
   );
