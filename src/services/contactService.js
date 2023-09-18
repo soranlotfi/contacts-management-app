@@ -33,6 +33,7 @@ export const getGroup = (groupId) => {
 // @desc  Create New Contact
 // @route POST http://localhost:9000/contacts
 export const createContact = (contact) => {
+  console.log(contact)
   const url = `${SERVER_URL}/contacts`;
   return axios.post(url, contact);
 };

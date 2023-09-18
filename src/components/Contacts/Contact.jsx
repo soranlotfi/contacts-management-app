@@ -11,7 +11,7 @@ const Contact = ({ contact }) => {
             <div className="col-md-4 col-sm-4">
               <img
                 src={contact.photo}
-                alt={contact.fullname}
+                alt={contact.fullName}
                 style={{ border: `1px solid ${PURPLE}` }}
                 className="img-fluid rounded"
               />
@@ -20,12 +20,12 @@ const Contact = ({ contact }) => {
               <ul className="list-group">
                 <li className="list-group-item list-group-item-dark">
                   نام و نام خانوداگی :{"  "}
-                  <span className="fw-bold">{contact.fullname}</span>
+                  <span className="fw-bold">{contact.fullName}</span>
                 </li>
 
                 <li className="list-group-item list-group-item-dark">
                   شماره موبایل :{"  "}
-                  <span className="fw-bold">{contact.mobile}</span>
+                  <span className="fw-bold">{contact.phoneNumber}</span>
                 </li>
 
                 <li className="list-group-item list-group-item-dark">

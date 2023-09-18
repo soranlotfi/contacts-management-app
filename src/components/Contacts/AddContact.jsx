@@ -3,11 +3,11 @@ import {Spinner} from "../";
 import {COMMENT, GREEN, PURPLE} from "../../helpers/colors";
 import {useFormik} from "formik";
 import *  as Yup from "yup"
+import {PromiseToast} from "../../Utils/Toast";
+import {createContact} from "../../services/contactService";
 
 const AddContact = ({
                         loading,
-                        contact,
-                        setContactInfo,
                         groups,
                     }) => {
 
@@ -19,7 +19,6 @@ const AddContact = ({
         job: "",
         group: 0
     }
-
     const validation = Yup.object({
         fullName: Yup.string().required("مقدار خواسته شده را پر کنید "),
         photo: Yup.string().required("مقدار خواسته شده را پر کنید "),
@@ -29,9 +28,23 @@ const AddContact = ({
         group: Yup.number().required("مقدار خواسته شده را پر کنید "),
     })
 
-    const handleSubmit = (values, {resetForm}) => {
-        console.log(values)
+    const handleSubmit = (values , {resetForm}) => {
+        try {
+            PromiseToast(createContact(values), {
+                success: "با موفقیت انجام شد",
+                pending: "در حال پردازش ...",
+                error: {
+                    render({data}) {
+                        return data.message ?? "مشکل در ارتباط"
+                    }
+                }
+            })
+        } catch (err) {
+            return err
+        }
+        resetForm()
     }
+
 
     const formik = useFormik(
         {
@@ -83,8 +96,8 @@ const AddContact = ({
                                                 onChange={formik.handleChange}
                                                 className="form-control"
                                                 placeholder="نام و نام خانوادگی"
-                                             />
-                                            {formik?. errors?.fullName && <p className={"text-danger font-monospace"}>
+                                            />
+                                            {formik?.errors?.fullName && <p className={"text-danger font-monospace"}>
                                                 {formik?.errors?.fullName}
                                             </p>}
                                         </div>
@@ -96,9 +109,9 @@ const AddContact = ({
                                                 value={formik.values?.photo}
                                                 onChange={formik.handleChange}
                                                 className="form-control"
-                                                 placeholder="آدرس تصویر"
+                                                placeholder="آدرس تصویر"
                                             />
-                                            {formik. errors?.photo && <p className={"text-danger font-monospace"}>
+                                            {formik.errors?.photo && <p className={"text-danger font-monospace"}>
                                                 {formik.errors?.photo}
                                             </p>}
                                         </div>
@@ -110,9 +123,9 @@ const AddContact = ({
                                                 value={formik.values?.phoneNumber}
                                                 onChange={formik.handleChange}
                                                 className="form-control"
-                                                 placeholder="شماره موبایل"
+                                                placeholder="شماره موبایل"
                                             />
-                                            {formik. errors?.phoneNumber && <p className={"text-danger font-monospace"}>
+                                            {formik.errors?.phoneNumber && <p className={"text-danger font-monospace"}>
                                                 {formik.errors.phoneNumber}
                                             </p>}
                                         </div>
@@ -124,9 +137,9 @@ const AddContact = ({
                                                 value={formik.values?.email}
                                                 onChange={formik.handleChange}
                                                 className="form-control"
-                                                 placeholder="آدرس ایمیل"
+                                                placeholder="آدرس ایمیل"
                                             />
-                                            {formik. errors?.email && <p className={"text-danger font-monospace"}>
+                                            {formik.errors?.email && <p className={"text-danger font-monospace"}>
                                                 {formik.errors?.email}
                                             </p>}
                                         </div>
@@ -138,10 +151,10 @@ const AddContact = ({
                                                 value={formik.values?.job}
                                                 onChange={formik.handleChange}
                                                 className="form-control"
-                                                 placeholder="شغل"
+                                                placeholder="شغل"
                                             />
                                             {formik.errors?.job && <p className={"text-danger font-monospace"}>
-                                                (formik.errors?.job)
+                                                {formik.errors?.job}
                                             </p>}
                                         </div>
                                         <div className="mb-2">
@@ -150,7 +163,7 @@ const AddContact = ({
                                                 id="group"
                                                 value={formik.values?.group}
                                                 onChange={formik.handleChange}
-                                                 className="form-control"
+                                                className="form-control"
                                             >
                                                 <option value="">انتخاب گروه</option>
                                                 {groups.length > 0 &&
@@ -164,7 +177,7 @@ const AddContact = ({
                                         <div className="mx-2">
                                             <input
                                                 type="submit"
-                                                onClick={()=>console.log(formik.errors)}
+                                                onClick={() => console.log(formik.errors)}
                                                 className="btn"
                                                 style={{backgroundColor: PURPLE}}
                                                 value="ساخت مخاطب"
