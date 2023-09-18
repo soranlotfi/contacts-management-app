@@ -21,7 +21,6 @@ const ViewContact = () => {
         setState({ ...state, loading: true });
         const { data: contactData } = await getContact(contactId);
         const { data: groupData } = await getGroup(contactData.group);
-
         setState({
           ...state,
           loading: false,
@@ -38,7 +37,7 @@ const ViewContact = () => {
   }, []);
 
   const { loading, contact, group } = state;
-
+  console.log(contact)
   return (
     <>
       <section className="view-contact-intro p3">
@@ -57,7 +56,7 @@ const ViewContact = () => {
         <Spinner />
       ) : (
         <>
-          {Object.keys(contact).length > 0 && (
+          {contact && (
             <section className="view-contact mt-e">
               <div
                 className="container p-2"
@@ -76,11 +75,11 @@ const ViewContact = () => {
                     <ul className="list-group">
                       <li className="list-group-item list-group-item-dark">
                         نام و نام خانوادگی :{" "}
-                        <span className="fw-bold">{contact.fullname}</span>
+                        <span className="fw-bold">{contact.fullName}</span>
                       </li>
                       <li className="list-group-item list-group-item-dark">
                         شماره موبایل :{" "}
-                        <span className="fw-bold">{contact.mobile}</span>
+                        <span className="fw-bold">{contact.phoneNumber}</span>
                       </li>
                       <li className="list-group-item list-group-item-dark">
                         ایمیل : <span className="fw-bold">{contact.email}</span>
