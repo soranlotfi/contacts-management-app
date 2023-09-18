@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
-
 import {
   AddContact,
   ViewContact,
@@ -8,14 +7,14 @@ import {
   EditContact,
   Navbar,
 } from "./components";
-
 import {
   getAllContacts,
   getAllGroups,
   createContact,
 } from "./services/contactService";
-
 import "./App.css";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ const App = () => {
   const [getContacts, setContacts] = useState([]);
   const [getGroups, setGroups] = useState([]);
   const [getContact, setContact] = useState({
-    fullname: "",
+    fullame: "",
     photo: "",
     mobile: "",
     email: "",
@@ -97,6 +96,20 @@ const App = () => {
 
   return (
     <div className="App">
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer rtl={true}/>
       <Navbar />
       <Routes>
         <Route path="/" element={<Navigate to="/contacts" />} />
