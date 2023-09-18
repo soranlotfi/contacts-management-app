@@ -1,144 +1,191 @@
-import { Link } from "react-router-dom";
-
-import { Spinner } from "../";
-import { COMMENT, GREEN, PURPLE } from "../../helpers/colors";
+import {Link} from "react-router-dom";
+import {Spinner} from "../";
+import {COMMENT, GREEN, PURPLE} from "../../helpers/colors";
+import {useFormik} from "formik";
+import *  as Yup from "yup"
 
 const AddContact = ({
-  loading,
-  contact,
-  setContactInfo,
-  groups,
-  createContactForm,
-}) => {
-  return (
-    <>
-      {loading ? (
-        <Spinner />
-      ) : (
+                        loading,
+                        contact,
+                        setContactInfo,
+                        groups,
+                    }) => {
+
+    const formValues = {
+        fullName: "",
+        photo: "",
+        phoneNumber: "",
+        email: "",
+        job: "",
+        group: 0
+    }
+
+    const validation = Yup.object({
+        fullName: Yup.string().required("مقدار خواسته شده را پر کنید "),
+        photo: Yup.string().required("مقدار خواسته شده را پر کنید "),
+        phoneNumber: Yup.string().required("مقدار خواسته شده را پر کنید "),
+        email: Yup.string().required("مقدار خواسته شده را پر کنید "),
+        job: Yup.string().required("مقدار خواسته شده را پر کنید "),
+        group: Yup.number().required("مقدار خواسته شده را پر کنید "),
+    })
+
+    const handleSubmit = (values, {resetForm}) => {
+        console.log(values)
+    }
+
+    const formik = useFormik(
+        {
+            initialValues: formValues,
+            validationSchema: validation,
+            onSubmit: handleSubmit
+        }
+    )
+    console.log(formik.values)
+    return (
         <>
-          <section className="p-3">
-            <img
-              src={require("../../assets/man-taking-note.png")}
-              height="400px"
-              style={{
-                position: "absolute",
-                zIndex: "-1",
-                top: "130px",
-                left: "100px",
-                opacity: "50%",
-              }}
-            />
-            <div className="container">
-              <div className="row">
-                <div className="col">
-                  <p
-                    className="h4 fw-bold text-center"
-                    style={{ color: GREEN }}
-                  >
-                    ساخت مخاطب جدید
-                  </p>
-                </div>
-              </div>
-              <hr style={{ backgroundColor: GREEN }} />
-              <div className="row mt-5">
-                <div className="col-md-4">
-                  <form onSubmit={createContactForm}>
-                    <div className="mb-2">
-                      <input
-                        name="fullname"
-                        type="text"
-                        value={contact.fullname}
-                        onChange={setContactInfo}
-                        className="form-control"
-                        placeholder="نام و نام خانوادگی"
-                        required={true}
-                      />
-                    </div>
-                    <div className="mb-2">
-                      <input
-                        name="photo"
-                        type="text"
-                        value={contact.photo}
-                        onChange={setContactInfo}
-                        className="form-control"
-                        required={true}
-                        placeholder="آدرس تصویر"
-                      />
-                    </div>
-                    <div className="mb-2">
-                      <input
-                        name="mobile"
-                        type="number"
-                        value={contact.mobile}
-                        onChange={setContactInfo}
-                        className="form-control"
-                        required={true}
-                        placeholder="شماره موبایل"
-                      />
-                    </div>
-                    <div className="mb-2">
-                      <input
-                        type="email"
-                        name="email"
-                        value={contact.email}
-                        onChange={setContactInfo}
-                        className="form-control"
-                        required={true}
-                        placeholder="آدرس ایمیل"
-                      />
-                    </div>
-                    <div className="mb-2">
-                      <input
-                        type="text"
-                        name="job"
-                        value={contact.job}
-                        onChange={setContactInfo}
-                        className="form-control"
-                        required={true}
-                        placeholder="شغل"
-                      />
-                    </div>
-                    <div className="mb-2">
-                      <select
-                        name="group"
-                        value={contact.group}
-                        onChange={setContactInfo}
-                        required={true}
-                        className="form-control"
-                      >
-                        <option value="">انتخاب گروه</option>
-                        {groups.length > 0 &&
-                          groups.map((group) => (
-                            <option key={group.id} value={group.id}>
-                              {group.name}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                    <div className="mx-2">
-                      <input
-                        type="submit"
-                        className="btn"
-                        style={{ backgroundColor: PURPLE }}
-                        value="ساخت مخاطب"
-                      />
-                      <Link
-                        to={"/contacts"}
-                        className="btn mx-2"
-                        style={{ backgroundColor: COMMENT }}
-                      >
-                        انصراف
-                      </Link>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </section>
+            {loading ? (
+                <Spinner/>
+            ) : (
+                <>
+                    <section className="p-3">
+                        <img
+                            src={require("../../assets/man-taking-note.png")}
+                            height="400px"
+                            style={{
+                                position: "absolute",
+                                zIndex: "-1",
+                                top: "130px",
+                                left: "100px",
+                                opacity: "50%",
+                            }}
+                        />
+                        <div className="container">
+                            <div className="row">
+                                <div className="col">
+                                    <p
+                                        className="h4 fw-bold text-center"
+                                        style={{color: GREEN}}
+                                    >
+                                        ساخت مخاطب جدید
+                                    </p>
+                                </div>
+                            </div>
+                            <hr style={{backgroundColor: GREEN}}/>
+                            <div className="row mt-5">
+                                <div className="col-md-4">
+                                    <form onSubmit={formik.handleSubmit}>
+                                        <div className="mb-2">
+                                            <input
+                                                name="fullName"
+                                                id="fullName"
+                                                type="text"
+                                                value={formik?.values?.fullName}
+                                                onChange={formik.handleChange}
+                                                className="form-control"
+                                                placeholder="نام و نام خانوادگی"
+                                             />
+                                            {formik?. errors?.fullName && <p className={"text-danger font-monospace"}>
+                                                {formik?.errors?.fullName}
+                                            </p>}
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                name="photo"
+                                                id="photo"
+                                                type="text"
+                                                value={formik.values?.photo}
+                                                onChange={formik.handleChange}
+                                                className="form-control"
+                                                 placeholder="آدرس تصویر"
+                                            />
+                                            {formik. errors?.photo && <p className={"text-danger font-monospace"}>
+                                                {formik.errors?.photo}
+                                            </p>}
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                name="phoneNumber"
+                                                type="number"
+                                                id={"phoneNumber"}
+                                                value={formik.values?.phoneNumber}
+                                                onChange={formik.handleChange}
+                                                className="form-control"
+                                                 placeholder="شماره موبایل"
+                                            />
+                                            {formik. errors?.phoneNumber && <p className={"text-danger font-monospace"}>
+                                                {formik.errors.phoneNumber}
+                                            </p>}
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                id="email"
+                                                value={formik.values?.email}
+                                                onChange={formik.handleChange}
+                                                className="form-control"
+                                                 placeholder="آدرس ایمیل"
+                                            />
+                                            {formik. errors?.email && <p className={"text-danger font-monospace"}>
+                                                {formik.errors?.email}
+                                            </p>}
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                type="text"
+                                                name="job"
+                                                id="job"
+                                                value={formik.values?.job}
+                                                onChange={formik.handleChange}
+                                                className="form-control"
+                                                 placeholder="شغل"
+                                            />
+                                            {formik.errors?.job && <p className={"text-danger font-monospace"}>
+                                                (formik.errors?.job)
+                                            </p>}
+                                        </div>
+                                        <div className="mb-2">
+                                            <select
+                                                name="group"
+                                                id="group"
+                                                value={formik.values?.group}
+                                                onChange={formik.handleChange}
+                                                 className="form-control"
+                                            >
+                                                <option value="">انتخاب گروه</option>
+                                                {groups.length > 0 &&
+                                                    groups.map((group) => (
+                                                        <option key={group.id} value={group.id}>
+                                                            {group.name}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        </div>
+                                        <div className="mx-2">
+                                            <input
+                                                type="submit"
+                                                onClick={()=>console.log(formik.errors)}
+                                                className="btn"
+                                                style={{backgroundColor: PURPLE}}
+                                                value="ساخت مخاطب"
+                                            />
+                                            <Link
+                                                to={"/contacts"}
+                                                className="btn mx-2"
+                                                style={{backgroundColor: COMMENT}}
+                                            >
+                                                انصراف
+                                            </Link>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            )}
         </>
-      )}
-    </>
-  );
+    );
 };
 
 export default AddContact;
