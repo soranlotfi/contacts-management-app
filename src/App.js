@@ -1,131 +1,150 @@
-import { useState, useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {useState, useEffect} from "react";
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import {
   AddContact,
   ViewContact,
   Contacts,
   EditContact,
-  Navbar,
+  Navbar, SearchContact,
 } from "./components";
 import {
-  getAllContacts,
-  getAllGroups,
-  createContact,
+    getAllContacts,
+    getAllGroups,
+    createContact, deleteContact,
 } from "./services/contactService";
 import "./App.css";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {confirmAlert} from "react-confirm-alert"
+import {COMMENT, CURRENTLINE, FOREGROUND, PURPLE, YELLOW} from "./assistants/colors";
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-  const [forceRender, setForceRender] = useState(false);
-  const [Contacts, setContacts] = useState([]);
-  const [Groups, setGroups] = useState([]);
-  const [getContact, setContact] = useState({
-    fullame: "",
-    photo: "",
-    mobile: "",
-    email: "",
-    job: "",
-    group: "",
-  });
+    const [loading, setLoading] = useState(false);
+    const [forceRender, setForceRender] = useState(false);
+    const [contacts, setContacts] = useState([]);
+    const [Groups, setGroups] = useState([]);
 
-  const navigate = useNavigate();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+                const {data: contactsData} = await getAllContacts();
+                const {data: groupsData} = await getAllGroups();
 
-        const { data: contactsData } = await getAllContacts();
-        const { data: groupsData } = await getAllGroups();
+                setContacts(contactsData);
+                setGroups(groupsData);
 
-        setContacts(contactsData);
-        setGroups(groupsData);
+                setLoading(false);
+            } catch (err) {
+                console.log(err.message);
+                setLoading(false);
+            }
+        };
 
-        setLoading(false);
-      } catch (err) {
-        console.log(err.message);
-        setLoading(false);
-      }
-    };
+        fetchData();
+    }, []);
 
-    fetchData();
-  }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+                const {data: contactsData} = await getAllContacts();
 
-        const { data: contactsData } = await getAllContacts();
+                setContacts(contactsData);
 
-        setContacts(contactsData);
+                setLoading(false);
+            } catch (err) {
+                console.log(err.message);
+                setLoading(false);
+            }
+        };
 
-        setLoading(false);
-      } catch (err) {
-        console.log(err.message);
-        setLoading(false);
-      }
-    };
+        fetchData();
+    }, [forceRender]);
 
-    fetchData();
-  }, [forceRender]);
 
-  const createContactForm = async (event) => {
-    event.preventDefault();
-    try {
-      const { status } = await createContact(getContact);
+    const confirm = (contactId, contactFullName) =>
+    {
+        confirmAlert({
+            customUI: ({onClose}) => {
+                return <div dir={"rtl"} style={{
+                    backgroundColor: CURRENTLINE,
+                    border: `1px solid ${PURPLE}`,
+                    borderRadius: "1em"
+                }}
+                            className={"p-4"}
+                >
+                  <h1 style={{color:YELLOW}}>پاک کردن مخاطب</h1>
+                  <p style={{color:FOREGROUND}}>آیا نسبت به پاک کردن مخپاطب {contactFullName}</p>
 
-      if (status === 201) {
-        setContact({});
-        setForceRender(!forceRender);
-        navigate("/contacts");
-      }
-    } catch (err) {
-      console.log(err.message);
+                  <button onClick={()=>{
+                    removeContact(contactId)
+                    onClose();
+                  }}
+                          className="btn mx-2"
+                          style={{backgroundColor:PURPLE}}
+                  >
+                    بلی
+                  </button>
+                  <button onClick={()=>{
+                    onClose();
+                  }}
+                          className="btn"
+                          style={{backgroundColor:COMMENT}}
+                  >
+                    خیر
+                  </button>
+                </div>
+            }
+        })
     }
-  };
+    const removeContact = async (contactId) => {
+        try {
+            setLoading(true)
+            const response = await deleteContact(contactId)
+            if (response) {
 
-  const setContactInfo = (event) => {
-    setContact({
-      ...getContact,
-      [event.target.name]: event.target.value,
-    });
-  };
+            }
+        } catch (err) {
+            console.log(err.message)
+            setLoading(false)
+        }
+    }
 
-  return (
-    <div className="App">
-      <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-      />
-      {/* Same as */}
-      <ToastContainer rtl={true}/>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Navigate to="/contacts" />} />
-        <Route
-          path="/contacts"
-          element={<Contacts contacts={Contacts} loading={loading} />}
-        />
-        <Route
-          path="/contacts/add"
-          element={<AddContact loading={loading} groups={Groups}/>}
-        />
-        <Route path="/contacts/:contactId" element={<ViewContact />} />
-        <Route path="/contacts/edit/:contactId" element={<EditContact groups={Groups}/>} />
-      </Routes>
-    </div>
-  );
+    return (
+        <div className="App">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            {/* Same as */}
+            <ToastContainer rtl={true}/>
+            <Navbar contacts={contacts} setContacts={setContacts}/>
+            <Routes>
+                <Route path="/" element={<Navigate to="/contacts"/>}/>
+                <Route
+                    path="/contacts"
+                    element={<Contacts contacts={contacts} loading={loading}/>}
+                />
+                <Route
+                    path="/contacts/add"
+                    element={<AddContact loading={loading} groups={Groups}/>}
+                />
+                <Route path="/contacts/:contactId" element={<ViewContact/>}/>
+                <Route path="/contacts/edit/:contactId" element={<EditContact groups={Groups}/>}/>
+            </Routes>
+        </div>
+    );
 };
 
 export default App;

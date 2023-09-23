@@ -1,12 +1,16 @@
-import {PURPLE,ORANGE,COMMENT} from "../../assistants/colors";
+import {PURPLE, ORANGE, COMMENT} from "../../assistants/colors";
 import {Spinner} from "../index";
 import * as Yup from "yup";
 import {PromiseToast} from "../../Utils/Toast";
-import {createContact} from "../../services/contactService";
+import {createContact, getContact, updateContact} from "../../services/contactService";
 import {useFormik} from "formik";
-import {Link} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
 
-const EditContact = ({loading , groups}) => {
+const EditContact = ({loading, groups}) => {
+    const Navigate=useNavigate()
+    const {contactId} = useParams()
+    const [contact,setContact] = useState()
     const formValues = {
         fullName: "",
         photo: "",
@@ -24,9 +28,11 @@ const EditContact = ({loading , groups}) => {
         group: Yup.number().required("مقدار خواسته شده را پر کنید "),
     })
 
-    const handleSubmit = (values , {resetForm}) => {
+
+
+    const handleSubmit = (values, {resetForm}) => {
         try {
-            PromiseToast(createContact(values), {
+            PromiseToast(updateContact(values,contactId), {
                 success: "با موفقیت انجام شد",
                 pending: "در حال پردازش ...",
                 error: {
@@ -35,6 +41,7 @@ const EditContact = ({loading , groups}) => {
                     }
                 }
             })
+            Navigate("/contacts",{replace:true})
         } catch (err) {
             return err
         }
@@ -44,28 +51,36 @@ const EditContact = ({loading , groups}) => {
         {
             initialValues: formValues,
             validationSchema: validation,
-            onSubmit: handleSubmit
+            onSubmit: handleSubmit,
         }
     )
-  return (
+    useEffect(() => {
+        getContact(contactId)
+            .then(r => {
+                formik.setValues(r.data)
+            }).catch(err => {
+            return err.message
+        })
+    }, []);
+    return (
         <>
             {loading ? (
-                <Spinner />
+                <Spinner/>
             ) : (
                 <>
                     <section className="p-3">
                         <div className="container">
                             <div className="row my-2">
                                 <div className="col text-center">
-                                    <p className="h4 fw-bold" style={{ color: ORANGE }}>
+                                    <p className="h4 fw-bold" style={{color: ORANGE}}>
                                         ویرایش مخاطب
                                     </p>
                                 </div>
                             </div>
-                            <hr style={{ backgroundColor: ORANGE }} />
+                            <hr style={{backgroundColor: ORANGE}}/>
                             <div
                                 className="row p-2 w-75 mx-auto align-items-center"
-                                style={{ backgroundColor: "#44475a", borderRadius: "1em" }}
+                                style={{backgroundColor: "#44475a", borderRadius: "1em"}}
                             >
                                 <div className="col-md-8">
                                     <form onSubmit={formik.handleSubmit}>
@@ -145,13 +160,13 @@ const EditContact = ({loading , groups}) => {
                                             <input
                                                 type="submit"
                                                 className="btn"
-                                                style={{ backgroundColor: PURPLE }}
+                                                style={{backgroundColor: PURPLE}}
                                                 value="ویرایش مخاطب"
                                             />
                                             <Link
                                                 to={"/contacts"}
                                                 className="btn mx-2"
-                                                style={{ backgroundColor: COMMENT }}
+                                                style={{backgroundColor: COMMENT}}
                                             >
                                                 انصراف
                                             </Link>
@@ -160,9 +175,9 @@ const EditContact = ({loading , groups}) => {
                                 </div>
                                 <div className="col-md-4">
                                     <img
-                                        src={contact.photo}
+                                        src={formik.values.photo}
                                         className="img-fluid rounded"
-                                        style={{ border: `1px solid ${PURPLE}` }}
+                                        style={{border: `1px solid ${PURPLE}`}}
                                     />
                                 </div>
                             </div>
@@ -172,14 +187,14 @@ const EditContact = ({loading , groups}) => {
                             <img
                                 src={require("../../assets/man-taking-note.png")}
                                 height="300px"
-                                style={{ opacity: "60%" }}
+                                style={{opacity: "60%"}}
                             />
                         </div>
                     </section>
                 </>
             )}
         </>
-  );
+    );
 };
 
 export default EditContact;

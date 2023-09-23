@@ -1,6 +1,15 @@
 import { PURPLE } from "../../helpers/colors";
 
-const SearchContact = () => {
+const SearchContact = ({contacts, setContacts}) => {
+    function searchData(value){
+        const filteredContacts = contacts.filter(contact =>
+             contact.fullName.includes(value)
+        )
+/*
+        setContacts(filteredContacts)
+*/
+        console.log(setContacts)
+    }
   return (
     <div className="input-group mx-2 w-75" dir="ltr">
       <span
@@ -17,6 +26,7 @@ const SearchContact = () => {
         placeholder="جستجوی مخاطب"
         aria-label="Search"
         aria-describedby="basic-addon1"
+        onChange={(e)=>searchData(e.target.value)}
       />
     </div>
   );

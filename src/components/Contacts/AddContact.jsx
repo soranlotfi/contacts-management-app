@@ -48,7 +48,8 @@ const AddContact = ({
         {
             initialValues: formValues,
             validationSchema: validation,
-            onSubmit: handleSubmit
+            onSubmit: handleSubmit,
+             validateOnChange:true,
         }
     )
     return (
