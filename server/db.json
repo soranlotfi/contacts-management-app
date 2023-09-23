@@ -2,39 +2,12 @@
   "contacts": [
     {
       "fullName": "سوران لطفی",
-      "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZC_95EVYM_FcC4b-LJg6XHL4p1E673azPuTMH92vOjnVJE0-dIyTszYt6teIip0PPcQs&usqp=CAU",
+      "photo": "https://th.bing.com/th/id/OIP.leRaZskYpTKA55a0St0tZgHaJa?pid=ImgDet&rs=1",
       "phoneNumber": 9184451244,
       "email": "soranit2000@gmail.com",
-      "job": "مکانیک",
-      "group": "1",
+      "job": "برنامه نویس استاد بزرگ",
+      "group": "3",
       "id": 1
-    },
-    {
-      "fullName": "رحیم جلوبندی ساز ",
-      "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZC_95EVYM_FcC4b-LJg6XHL4p1E673azPuTMH92vOjnVJE0-dIyTszYt6teIip0PPcQs&usqp=CAU",
-      "phoneNumber": 9184451244,
-      "email": "soranit2000@gmail.com",
-      "job": "برنامه نویس ",
-      "group": "3",
-      "id": 2
-    },
-    {
-      "fullName": "رحیم جلوبندی ساز ",
-      "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZC_95EVYM_FcC4b-LJg6XHL4p1E673azPuTMH92vOjnVJE0-dIyTszYt6teIip0PPcQs&usqp=CAU",
-      "phoneNumber": 9184451244,
-      "email": "soranit2000@gmail.com",
-      "job": "برنامه نویس ",
-      "group": "3",
-      "id": 3
-    },
-    {
-      "fullName": "رحیم جلوبندی ساز ",
-      "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZC_95EVYM_FcC4b-LJg6XHL4p1E673azPuTMH92vOjnVJE0-dIyTszYt6teIip0PPcQs&usqp=CAU",
-      "phoneNumber": 9184451244,
-      "email": "soranit2000@gmail.com",
-      "job": "برنامه نویس ",
-      "group": "3",
-      "id": 4
     }
   ],
   "groups": [
