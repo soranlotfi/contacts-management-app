@@ -1,16 +1,16 @@
-import {Link} from "react-router-dom";
-import {Spinner} from "../";
-import {COMMENT, GREEN, PURPLE} from "../../helpers/colors";
-import {useFormik} from "formik";
-import *  as Yup from "yup"
+import {PURPLE, ORANGE, COMMENT} from "../../assistants/colors";
+import {Spinner} from "../index";
+import * as Yup from "yup";
 import {PromiseToast} from "../../Utils/Toast";
-import {createContact} from "../../services/contactService";
+import {createContact, getContact, updateContact} from "../../services/contactService";
+import {useFormik} from "formik";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {useEffect, useRef, useState} from "react";
 
-const AddContact = ({
-                        loading,
-                        groups,
-                    }) => {
-
+const EditContact = ({loading, groups}) => {
+    const Navigate=useNavigate()
+    const {contactId} = useParams()
+    const [contact,setContact] = useState()
     const formValues = {
         fullName: "",
         photo: "",
@@ -28,9 +28,11 @@ const AddContact = ({
         group: Yup.number().required("مقدار خواسته شده را پر کنید "),
     })
 
-    const handleSubmit = (values , {resetForm}) => {
+
+
+    const handleSubmit = (values, {resetForm}) => {
         try {
-            PromiseToast(createContact(values), {
+            PromiseToast(updateContact(values,contactId), {
                 success: "با موفقیت انجام شد",
                 pending: "در حال پردازش ...",
                 error: {
@@ -39,6 +41,7 @@ const AddContact = ({
                     }
                 }
             })
+            Navigate("/contacts",{replace:true})
         } catch (err) {
             return err
         }
@@ -49,9 +52,16 @@ const AddContact = ({
             initialValues: formValues,
             validationSchema: validation,
             onSubmit: handleSubmit,
-             validateOnChange:true,
         }
     )
+    useEffect(() => {
+        getContact(contactId)
+            .then(r => {
+                formik.setValues(r.data)
+            }).catch(err => {
+            return err.message
+        })
+    }, []);
     return (
         <>
             {loading ? (
@@ -59,108 +69,82 @@ const AddContact = ({
             ) : (
                 <>
                     <section className="p-3">
-                        <img
-                            src={require("../../assets/man-taking-note.png")}
-                            height="400px"
-                            style={{
-                                position: "absolute",
-                                zIndex: "-1",
-                                top: "130px",
-                                left: "100px",
-                                opacity: "50%",
-                            }}
-                        />
                         <div className="container">
-                            <div className="row">
-                                <div className="col">
-                                    <p
-                                        className="h4 fw-bold text-center"
-                                        style={{color: GREEN}}
-                                    >
-                                        ساخت مخاطب جدید
+                            <div className="row my-2">
+                                <div className="col text-center">
+                                    <p className="h4 fw-bold" style={{color: ORANGE}}>
+                                        ویرایش مخاطب
                                     </p>
                                 </div>
                             </div>
-                            <hr style={{backgroundColor: GREEN}}/>
-                            <div className="row mt-5">
-                                <div className="col-md-4">
+                            <hr style={{backgroundColor: ORANGE}}/>
+                            <div
+                                className="row p-2 w-75 mx-auto align-items-center"
+                                style={{backgroundColor: "#44475a", borderRadius: "1em"}}
+                            >
+                                <div className="col-md-8">
                                     <form onSubmit={formik.handleSubmit}>
                                         <div className="mb-2">
                                             <input
                                                 name="fullName"
-                                                id="fullName"
                                                 type="text"
-                                                value={formik?.values?.fullName}
-                                                onChange={formik.handleChange}
                                                 className="form-control"
+                                                value={formik.values.fullName}
+                                                onChange={formik.handleChange}
+                                                required={true}
                                                 placeholder="نام و نام خانوادگی"
                                             />
-                                            {formik?.errors?.fullName && <p className={"text-danger font-monospace"}>
-                                                {formik?.errors?.fullName}
-                                            </p>}
                                         </div>
                                         <div className="mb-2">
                                             <input
                                                 name="photo"
-                                                id="photo"
                                                 type="text"
-                                                value={formik.values?.photo}
+                                                value={formik.values.photo}
                                                 onChange={formik.handleChange}
                                                 className="form-control"
+                                                required={true}
                                                 placeholder="آدرس تصویر"
                                             />
-                                            {formik.errors?.photo && <p className={"text-danger font-monospace"}>
-                                                {formik.errors?.photo}
-                                            </p>}
                                         </div>
                                         <div className="mb-2">
                                             <input
                                                 name="phoneNumber"
                                                 type="number"
-                                                id={"phoneNumber"}
-                                                value={formik.values?.phoneNumber}
-                                                onChange={formik.handleChange}
                                                 className="form-control"
+                                                value={formik.values.phoneNumber}
+                                                onChange={formik.handleChange}
+                                                required={true}
                                                 placeholder="شماره موبایل"
                                             />
-                                            {formik.errors?.phoneNumber && <p className={"text-danger font-monospace"}>
-                                                {formik.errors.phoneNumber}
-                                            </p>}
                                         </div>
                                         <div className="mb-2">
                                             <input
-                                                type="email"
                                                 name="email"
-                                                id="email"
-                                                value={formik.values?.email}
-                                                onChange={formik.handleChange}
+                                                type="email"
                                                 className="form-control"
+                                                value={formik.values.email}
+                                                onChange={formik.handleChange}
+                                                required={true}
                                                 placeholder="آدرس ایمیل"
                                             />
-                                            {formik.errors?.email && <p className={"text-danger font-monospace"}>
-                                                {formik.errors?.email}
-                                            </p>}
                                         </div>
                                         <div className="mb-2">
                                             <input
-                                                type="text"
                                                 name="job"
-                                                id="job"
-                                                value={formik.values?.job}
-                                                onChange={formik.handleChange}
+                                                type="text"
                                                 className="form-control"
+                                                value={formik.values.job}
+                                                onChange={formik.handleChange}
+                                                required={true}
                                                 placeholder="شغل"
                                             />
-                                            {formik.errors?.job && <p className={"text-danger font-monospace"}>
-                                                {formik.errors?.job}
-                                            </p>}
                                         </div>
                                         <div className="mb-2">
                                             <select
                                                 name="group"
-                                                id="group"
-                                                value={formik.values?.group}
+                                                value={formik.values.group}
                                                 onChange={formik.handleChange}
+                                                required={true}
                                                 className="form-control"
                                             >
                                                 <option value="">انتخاب گروه</option>
@@ -172,13 +156,12 @@ const AddContact = ({
                                                     ))}
                                             </select>
                                         </div>
-                                        <div className="mx-2">
+                                        <div className="mb-2">
                                             <input
                                                 type="submit"
-                                                onClick={() => console.log(formik.errors)}
                                                 className="btn"
                                                 style={{backgroundColor: PURPLE}}
-                                                value="ساخت مخاطب"
+                                                value="ویرایش مخاطب"
                                             />
                                             <Link
                                                 to={"/contacts"}
@@ -190,7 +173,22 @@ const AddContact = ({
                                         </div>
                                     </form>
                                 </div>
+                                <div className="col-md-4">
+                                    <img
+                                        src={formik.values.photo}
+                                        className="img-fluid rounded"
+                                        style={{border: `1px solid ${PURPLE}`}}
+                                    />
+                                </div>
                             </div>
+                        </div>
+
+                        <div className="text-center mt-1">
+                            <img
+                                src={require("../../assets/man-taking-note.png")}
+                                height="300px"
+                                style={{opacity: "60%"}}
+                            />
                         </div>
                     </section>
                 </>
@@ -199,4 +197,4 @@ const AddContact = ({
     );
 };
 
-export default AddContact;
+export default EditContact;

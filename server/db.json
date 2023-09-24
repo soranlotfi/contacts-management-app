@@ -1,0 +1,35 @@
+{
+  "contacts": [
+    {
+      "fullName": "سوران لطفی",
+      "photo": "https://th.bing.com/th/id/OIP.leRaZskYpTKA55a0St0tZgHaJa?pid=ImgDet&rs=1",
+      "phoneNumber": 9184451244,
+      "email": "soranit2000@gmail.com",
+      "job": "برنامه نویس استاد بزرگ",
+      "group": "3",
+      "id": 1
+    }
+  ],
+  "groups": [
+    {
+      "id": "1",
+      "name": "همکار"
+    },
+    {
+      "id": "2",
+      "name": "دوست"
+    },
+    {
+      "id": "3",
+      "name": "فامیل"
+    },
+    {
+      "id": "4",
+      "name": "سرویس"
+    },
+    {
+      "id": "5",
+      "name": "آشنا"
+    }
+  ]
+}
